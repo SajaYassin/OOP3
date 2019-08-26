@@ -73,10 +73,12 @@ public class StoryTesterImpl implements StoryTester {
             Set<String> interfaces = Arrays.stream(f.getType().getInterfaces()).map(i -> i.getName()).collect(Collectors.toSet());
             if (interfaces.contains("java.lang.Cloneable")) {
                 Method clone = f.getType().getDeclaredMethod("clone");
+                clone.setAccessible(true);
                 f.set(theNew, clone.invoke(f.get(old)));
             } else {
                 try {
                     Constructor<?> constructor = f.getType().getDeclaredConstructor(f.getType());
+                    constructor.setAccessible(true);
                     f.set(theNew, constructor.newInstance(f.get(old)));
                 } catch (NoSuchMethodException e) {
                     f.set(theNew, f.get(old));
